@@ -1,7 +1,8 @@
 /* Global Variables */
 
 // Parsonal AppKey openweathermap.com
-const APPKEY = '8e4f8aff72844a89900adeedc13ef70c';
+/** removed the api key */
+
 const BASEURL = 'http://api.openweathermap.org/data/2.5/weather?zip='
 // Inputs & Buttons
 const Button = document.querySelector('#generate');
@@ -21,9 +22,11 @@ const getDate = function () {
 
 // get Weather data Form openweathermap.com web site
 const getWeatherData = async function () {
-    if (!zip.value)
+    if (!zip.value) {
+        alert('that no zip code provided, Please fill Input');
         return false;
-    let url = `${BASEURL}${zip.value}&appid=${APPKEY}`;
+    }
+    let url = `${BASEURL}${zip.value}&units=metric&appid=${APPKEY}`;
     let response = await fetch(url);
     try {
         const data = await response.json();
@@ -51,7 +54,7 @@ const postWeatherData = async function (url = '', data = {}) {
     };
 }
 // Get All Data Form out API
-const getLastWeatherData = async function (url = ''){
+const getLastWeatherData = async function (url = '') {
     let response = await fetch(url);
     try {
         const data = await response.json();
@@ -63,11 +66,10 @@ const getLastWeatherData = async function (url = ''){
 // Update UI in Front end
 const updateDisplayUI = function () {
     feelings.value = '';
-    getLastWeatherData('/all').then((result)=>{
-        let data = result.pop();
-        temp.innerHTML = data.temp;
-        date.innerHTML = data.date;
-        content.innerHTML = data.content;
+    getLastWeatherData('/all').then((result) => {
+        temp.innerHTML = result.temp;
+        date.innerHTML = result.date;
+        content.innerHTML = result.content;
     });
 };
 /* Event listener */
@@ -76,7 +78,7 @@ const updateDisplayUI = function () {
 Button.addEventListener('click', (e) => {
     e.preventDefault();
     getWeatherData().then((data) => {
-        if(!data)
+        if (!data)
             return false;
         postWeatherData('/add', {
             temp: data.main.temp,
